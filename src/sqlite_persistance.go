@@ -14,10 +14,11 @@ import (
 	"io/ioutil"
 	"math"
 	"math/big"
-	"modernc.org/mathutil"
-	_ "modernc.org/sqlite"
 	"net/http"
 	"os"
+
+	"modernc.org/mathutil"
+	_ "modernc.org/sqlite"
 )
 
 type SqliteState struct {
@@ -42,7 +43,7 @@ func (p *SqlitePersistance) GetRemoteUpdates() (err error) {
 	if err != nil {
 		return err
 	}
-
+	// TODO: remove
 	request, err = p.Encrypt(request)
 	if err != nil {
 		return err
@@ -56,12 +57,14 @@ func (p *SqlitePersistance) GetRemoteUpdates() (err error) {
 	if err != nil {
 		return err
 	}
+	// TODO: remove
 	body, err = p.DecryptData(body)
 	if err != nil {
 		return err
 	}
 
 	updates := make([]KvEntry, 0)
+	// TODO: remove
 	err = json.Unmarshal(body, &updates)
 	if err != nil {
 		return err
@@ -164,7 +167,7 @@ func NewSqlitePersistance(path string) (*SqlitePersistance, error) {
 	} else {
 		// init DB
 		_, err := db.Exec(`
-        create table if not exists entries (key, value, timestamp, pid, counter, urltoken); 
+        create table if not exists entries (key, value, timestamp, pid, counter, urltoken);
         create table if not exists state   (state);`)
 
 		if err != nil {
@@ -192,7 +195,8 @@ func NewSqlitePersistance(path string) (*SqlitePersistance, error) {
 	return persistance, nil
 }
 
-func (s *SqlitePersistance) DecryptData(data []byte) ([]byte, error) {
+// TODO: remove
+func (s *SqlitePersistance) DeprecatedDecryptData(data []byte) ([]byte, error) {
 	key, err := hex.DecodeString(s.State.Key)
 	if err != nil {
 		return nil, err
@@ -220,7 +224,7 @@ func (s *SqlitePersistance) DecryptData(data []byte) ([]byte, error) {
 
 	return gcm.Open(nil, nonce, ciphertext, nil)
 }
-func (s *SqlitePersistance) Encrypt(data []byte) ([]byte, error) {
+func (s *SqlitePersistance) DeprecatedEncrypt(data []byte) ([]byte, error) {
 	key, err := hex.DecodeString(s.State.Key)
 	if err != nil {
 		return nil, err

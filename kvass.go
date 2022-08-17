@@ -11,9 +11,9 @@ import (
 	"github.com/teris-io/cli"
 	"io"
 	"io/ioutil"
-	"net/url"
 	"log"
 	"math"
+	"net/url"
 	"os"
 	"path"
 	"strconv"
@@ -230,7 +230,7 @@ func main() {
 			host := strings.TrimSpace(args[0])
 
 			p := getPersistance(options)
-			
+
 			url, err := url.ParseRequestURI(host)
 			if err != nil {
 				p.State.RemoteHostname = "http://" + host
